@@ -1,0 +1,14 @@
+{
+  "name": "activation-console",
+  "version": "1.0.0",
+  "private": true,
+  "description": "自动化运维激活管控控制台 - Cloudflare Worker 版（D1 + KV + 静态资产）",
+  "main": "src/index.js",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "3.107.3"
+  }
+}

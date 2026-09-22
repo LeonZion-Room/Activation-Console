@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>激活中心 · 自动化运维激活管控控制台</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- 登录页 -->
+<div id="loginPage" class="login-wrap hidden">
+  <div class="login-card">
+    <div class="logo">⚡</div>
+    <h1>激活中心</h1>
+    <p class="sub">自动化运维激活管控控制台</p>
+    <input type="password" id="loginPwd" placeholder="请输入管理密码" autocomplete="current-password">
+    <button id="loginBtn" class="btn primary block">登 录</button>
+    <p id="loginErr" class="err"></p>
+  </div>
+</div>
+
+<!-- 主界面 -->
+<div id="mainPage" class="hidden">
+  <header class="topbar">
+    <div class="brand">⚡ 激活中心 <span class="tag">Activate Console</span></div>
+    <nav>
+      <a href="#" data-view="dashboard" class="nav active">看板</a>
+      <a href="#" data-view="cards" class="nav">激活卡片</a>
+      <a href="#" data-view="logs" class="nav">校验日志</a>
+      <a href="#" data-view="oplogs" class="nav">操作日志</a>
+      <a href="#" data-view="settings" class="nav">设置</a>
+    </nav>
+    <div class="user">admin <button id="logoutBtn" class="btn ghost">退出</button></div>
+  </header>
+
+  <main class="content">
+
+    <!-- 看板 -->
+    <section id="view-dashboard" class="view">
+      <div class="stats">
+        <div class="stat"><div class="num" id="stTotal">0</div><div class="lbl">卡片总数</div></div>
+        <div class="stat ok"><div class="num" id="stActive">0</div><div class="lbl">已激活</div></div>
+        <div class="stat danger"><div class="num" id="stStopped">0</div><div class="lbl">已停用</div></div>
+        <div class="stat info"><div class="num" id="stVerify">0</div><div class="lbl">24h 校验</div></div>
+        <div class="stat warn"><div class="num" id="stGroups">0</div><div class="lbl">分组数</div></div>
+      </div>
+      <div class="panel">
+        <h3>最近心跳校验</h3>
+        <table class="table">
+          <thead><tr><th>项目编码</th><th>客户端IP</th><th>结果</th><th>说明</th><th>时间</th></tr></thead>
+          <tbody id="recentVerify"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 卡片 -->
+    <section id="view-cards" class="view hidden">
+      <div class="toolbar">
+        <select id="groupFilter"><option value="0">全部分组</option></select>
+        <input type="text" id="searchBox" placeholder="搜索名称 / 编码…">
+        <button class="btn" id="batchOn">批量激活</button>
+        <button class="btn" id="batchOff">批量停用</button>
+        <span class="flex"></span>
+        <button class="btn" id="groupMgrBtn">分组管理</button>
+        <button class="btn primary" id="newCardBtn">+ 新建卡片</button>
+      </div>
+      <div class="cards" id="cardGrid"></div>
+    </section>
+
+    <!-- 校验日志 -->
+    <section id="view-logs" class="view hidden">
+      <div class="toolbar">
+        <input type="text" id="logCode" placeholder="按项目编码过滤…">
+        <button class="btn" id="logSearch">查询</button>
+        <span class="flex"></span>
+        <button class="btn" id="logPrev">上一页</button>
+        <span id="logPageInfo">1</span>
+        <button class="btn" id="logNext">下一页</button>
+      </div>
+      <div class="panel">
+        <table class="table">
+          <thead><tr><th>ID</th><th>项目编码</th><th>客户端IP</th><th>结果</th><th>说明</th><th>时间</th></tr></thead>
+          <tbody id="logBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 操作日志 -->
+    <section id="view-oplogs" class="view hidden">
+      <div class="toolbar">
+        <span class="flex"></span>
+        <button class="btn" id="opPrev">上一页</button>
+        <span id="opPageInfo">1</span>
+        <button class="btn" id="opNext">下一页</button>
+      </div>
+      <div class="panel">
+        <table class="table">
+          <thead><tr><th>ID</th><th>操作人</th><th>动作</th><th>详情</th><th>IP</th><th>时间</th></tr></thead>
+          <tbody id="opBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 设置 -->
+    <section id="view-settings" class="view hidden">
+      <div class="panel narrow">
+        <h3>安全设置</h3>
+        <div class="form-row"><label>管理密码</label><button class="btn" id="changePwdBtn">修改密码</button></div>
+        <div class="form-row"><label>全局密钥</label><code id="apiKeyText">-</code><button class="btn" id="rotateKeyBtn">轮换密钥</button></div>
+        <hr>
+        <h3>客户端接入说明</h3>
+        <pre id="sdkDemo"></pre>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- 弹层 -->
+<div id="modal" class="modal hidden">
+  <div class="modal-card">
+    <h3 id="modalTitle">标题</h3>
+    <div id="modalBody"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">取消</button>
+      <button class="btn primary" id="modalOk">确定</button>
+    </div>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
