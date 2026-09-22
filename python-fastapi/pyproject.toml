@@ -1,0 +1,14 @@
+[project]
+name = "activation-console-py"
+version = "1.0.0"
+description = "激活中心 Activation Console - Cloudflare Python Workers FastAPI 版（D1 + KV + 静态资产）"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi",
+]
+
+[dependency-groups]
+dev = [
+    "workers-py",
+    "workers-runtime-sdk"
+]

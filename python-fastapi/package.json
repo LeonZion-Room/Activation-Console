@@ -1,0 +1,13 @@
+{
+  "name": "activation-console-py",
+  "version": "1.0.0",
+  "private": true,
+  "description": "激活中心 - Cloudflare Python Workers FastAPI 版",
+  "scripts": {
+    "deploy": "uv run pywrangler deploy",
+    "dev": "uv run pywrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "^4.114.0"
+  }
+}
