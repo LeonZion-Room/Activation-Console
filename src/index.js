@@ -47,6 +47,7 @@ async function checkRecord(env, code, ip, result, msg) {
 /* 管理端会话校验 */
 async function adminAuth(env, request) {
   const tok = request.headers.get("x-token") || "";
+  if (!tok) return false;
   const v = await env.SESSIONS.get(tok);
   if (!v) return false;
   return true;
@@ -286,6 +287,12 @@ export default {
       /* 客户端开放接口 */
       if (m === "GET" && p === "/api/v1/project/check") return await hCheck(env, request, url);
       if (m === "GET" && p === "/api/v1/info") return await hInfo(env, request);
+
+      /* 静态资产兜底 */
+      if (m === "GET" && env.ASSETS) {
+        const resp = await env.ASSETS.fetch(request);
+        if (resp.status !== 404) return resp;
+      }
 
       return bad("Not Found", 404);
     } catch (e) {
