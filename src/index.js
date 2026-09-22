@@ -262,7 +262,11 @@ export default {
       if (m === "POST" && p === "/api/v1/login") return await hLogin(env, request);
       if (m === "POST" && p === "/api/v1/logout") { await env.SESSIONS.delete(request.headers.get("x-token") || ""); return ok(); }
 
-      /* 以下均需管理会话 */
+      /* ------------- 客户端开放接口（X-Auth-Key 自主鉴权） ------------- */
+      if (m === "GET" && p === "/api/v1/project/check") return await hCheck(env, request, url);
+      if (m === "GET" && p === "/api/v1/info") return await hInfo(env, request);
+
+      /* 以下均为管理端，需登录会话 */
       if (!(await adminAuth(env, request))) return bad("未登录或会话已过期", 401);
 
       if (m === "GET" && p === "/api/v1/dashboard") return await hDashboard(env);
@@ -283,10 +287,6 @@ export default {
 
       if (m === "GET" && p === "/api/v1/settings") return await hGetSettings(env);
       if (m === "PUT" && p === "/api/v1/settings") return await hPutSettings(env, request);
-
-      /* 客户端开放接口 */
-      if (m === "GET" && p === "/api/v1/project/check") return await hCheck(env, request, url);
-      if (m === "GET" && p === "/api/v1/info") return await hInfo(env, request);
 
       /* 静态资产兜底 */
       if (m === "GET" && env.ASSETS) {
