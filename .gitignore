@@ -1,5 +1,3 @@
 node_modules/
-wrangler.toml
 .dev.vars
 *.log
-.DS_Store

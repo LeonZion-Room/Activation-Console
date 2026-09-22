@@ -1,0 +1,16 @@
+name = "activation-console"
+main = "src/index.js"
+compatibility_date = "2025-11-01"
+
+workers_dev = true
+assets = { directory = "./assets", binding = "ASSETS" }
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "2df548705cfb4a6fba097b3c38d51c93"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "activation-console"
+database_id = "0d0f9909-5ec4-480e-a095-b187c09283c0"
+migrations_dir = "./migrations"
