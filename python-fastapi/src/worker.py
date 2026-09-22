@@ -252,7 +252,7 @@ async def group_add(body: GroupIn, request: Request):
     return ok({"id": gid})
 
 
-@app.put(f"{API_PREFIX}/group/update/{gid}")
+@app.put(f"{API_PREFIX}/group/update/{{gid}}")
 async def group_update(gid: int, body: GroupIn, request: Request):
     await auth_dep(request)
     r = await _db(request).prepare("UPDATE groups SET name=?, remark=? WHERE id=?").bind(body.name, body.remark, gid).run()
@@ -262,7 +262,7 @@ async def group_update(gid: int, body: GroupIn, request: Request):
     return ok()
 
 
-@app.delete(f"{API_PREFIX}/group/delete/{gid}")
+@app.delete(f"{API_PREFIX}/group/delete/{{gid}}")
 async def group_delete(gid: int, request: Request):
     await auth_dep(request)
     n = (await _db(request).prepare("SELECT COUNT(*) n FROM projects WHERE group_id=?").bind(gid).first()).n
@@ -323,7 +323,7 @@ async def project_status(body: ProjectStatusIn, request: Request):
     return ok({"is_activate": bool(val)})
 
 
-@app.delete(f"{API_PREFIX}/project/delete/{pid}")
+@app.delete(f"{API_PREFIX}/project/delete/{{pid}}")
 async def project_delete(pid: int, request: Request):
     await auth_dep(request)
     await _db(request).prepare("DELETE FROM projects WHERE id=?").bind(pid).run()
@@ -398,16 +398,10 @@ async def put_settings(body: SettingsIn, request: Request):
     return ok({"auth_key": s.get("auth_key")})
 
 
-# ---------- 静态资产兜底（ASSETS binding） ----------
+# ---------- 兜底 404 ----------
 @app.get("/{path:path}")
 async def frontend(path: str, request: Request):
-    env = request.scope["env"]
-    asset_url = f"https://assets.local/{path}"
-    resp = await env.ASSETS.fetch(asset_url)
-    if resp.status == 404:
-        return JSONResponse(status_code=404, content={"code": 404, "msg": "Not Found", "data": None})
-    body = await resp.bytes()
-    return Response(body=body, status_code=resp.status, headers=dict(resp.headers))
+    return JSONResponse(status_code=404, content={"code": 404, "msg": "Not Found", "data": None})
 
 
 from workers import asgi  # noqa: E402
